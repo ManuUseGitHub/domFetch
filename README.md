@@ -157,7 +157,7 @@ Fetches elements matching a CSS selector from a given source.
 | `source`         | `string`                                          | —        | URL or relative file path containing HTML |
 | `selector`       | `string`                                          | —        | CSS selector (uses `querySelectorAll`)    |
 | `options.output` | `"object" \| "html" \| "children" \| "breakdown"` | `"html"` | Format of returned elements               |
-| `options.source` | `"url" \| "file"`                                 | `"url"`  | Defines how the source is fetched         |
+| `options.source` | `"url" \| "file" \| "string"`                     | `"url"`  | Defines how the source is fetched         |
 
 #### Returns
 
@@ -171,7 +171,7 @@ An array of elements formatted according to the selected `output` option.
 ```ts
 type FetchOptions = {
   output?: "object" | "html" | "children" | "breakdown";
-  source?: "url" | "file";
+  source?: "url" | "file" | "string";
 };
 ```
 
