@@ -15,7 +15,7 @@ export function validateOutputOption(options: FetchOptions) {
 
 export function validateSourceOption(options: FetchOptions) {
 	const source = options.source;
-	if (!/^(?:url|file)$/.test(source)) {
+	if (!/^(?:url|file|string)$/.test(source)) {
 		throw `source option not supported ["${source}"]`;
 	}
 	return source;
@@ -46,4 +46,11 @@ export async function validateFileExistance(source: string) {
 		throw new Error(`no such file ["${source}"]`);
 	}
 	return await readFile(source, "utf-8");
+}
+
+export async function validateDefinedString(source: string) {
+	if (source == null || source == undefined) {
+		throw new Error(`no content read from["${source}"]`);
+	}
+	return source;
 }

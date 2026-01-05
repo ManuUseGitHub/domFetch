@@ -1,5 +1,5 @@
 import { FetchOptions } from "./types";
-import { _fromFile, _fromHttp } from "./fetch";
+import { _fromFile, _fromHttp, _fromString } from "./fetch";
 import { validateOutputOption, validateSourceOption } from "./validations";
 
 /**
@@ -23,6 +23,8 @@ export async function selectElements(
 			nodes = await _fromHttp(source, selector);
 		} else if (sourceOption == "file") {
 			nodes = await _fromFile(source, selector);
+		} else if (sourceOption == "string") {
+			nodes = await _fromString(source, selector);
 		}
 
 		return nodes.map((el) => {

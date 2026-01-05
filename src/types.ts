@@ -12,8 +12,9 @@ export type FetchOutput = "object" | "html" | "children" | "breakdown";
  * Defines the kind of sourse to fetch from or read from
  * file : the source should be a file defined by a relative path
  * url : the source should be the response of a fetched resource through the HTTP GET method
+ * string : the source should be from a string read at runtime
  */
-export type FetchSource = "file" | "url";
+export type FetchSource = "file" | "url" | "string";
 
 /**
  * Defines how the request should work to fetch the element of a given source kind

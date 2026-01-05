@@ -46,6 +46,21 @@ const elements = await selectElements(
   { source: "file" }
 );
 ```
+---
+
+### Fetch from runtime string
+```ts
+const html = "<!DOCTYPE html>" +`
+<html>
+  <body>
+    <a class='article'>Click here<a/>
+  </body>
+</html>`;
+
+const elements = await selectElements(
+  html, ".article", { source: "string" }
+);
+```
 
 ---
 
@@ -78,7 +93,7 @@ The `output` option controls how each matched element is returned.
 {
   tag: "a",
   text: "Click here",
-  html: "Click here",
+  html: "<a>Click here</a>",
   attributes: {
     href: "/about",
     class: "link"

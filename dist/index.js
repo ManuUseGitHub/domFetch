@@ -28,7 +28,7 @@ var import_jsdom = require("jsdom");
 
 // src/constants.ts
 var HTML_CONTENT_TYPE = "text/html";
-var VERSION = "1.0.0";
+var VERSION = "1.0.2";
 
 // src/validations.ts
 var import_node_fs = require("fs");
@@ -43,7 +43,7 @@ function validateOutputOption(options) {
 }
 function validateSourceOption(options) {
   const source = options.source;
-  if (!/^(?:url|file)$/.test(source)) {
+  if (!/^(?:url|file|string)$/.test(source)) {
     throw `source option not supported ["${source}"]`;
   }
   return source;
@@ -66,6 +66,12 @@ async function validateFileExistance(source) {
   }
   return await (0, import_promises.readFile)(source, "utf-8");
 }
+async function validateDefinedString(source) {
+  if (source == null || source == void 0) {
+    throw new Error(`no content read from["${source}"]`);
+  }
+  return source;
+}
 
 // src/fetch.ts
 async function _fromHttp(source, selector) {
@@ -86,6 +92,14 @@ var _fromFile = async (source, selector) => {
   const document = dom.window.document;
   return Array.from(document.querySelectorAll(selector));
 };
+var _fromString = async (html, selector) => {
+  html = await validateDefinedString(html);
+  const dom = new import_jsdom.JSDOM(html, {
+    contentType: HTML_CONTENT_TYPE
+  });
+  const document = dom.window.document;
+  return Array.from(document.querySelectorAll(selector));
+};
 
 // src/index.ts
 async function selectElements(source, selector, options) {
@@ -97,6 +111,8 @@ async function selectElements(source, selector, options) {
       nodes = await _fromHttp(source, selector);
     } else if (sourceOption == "file") {
       nodes = await _fromFile(source, selector);
+    } else if (sourceOption == "string") {
+      nodes = await _fromString(source, selector);
     }
     return nodes.map((el) => {
       return _computed(el, fixedOptions);
