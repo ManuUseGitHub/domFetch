@@ -33,7 +33,7 @@ var VERSION = "1.0.0";
 // src/validations.ts
 var import_node_fs = require("fs");
 var import_promises = require("fs/promises");
-var UA = `dom-fetch/${VERSION}`;
+var UA = `@maze014/dom-fetch/${VERSION}`;
 function validateOutputOption(options) {
   const output = options.output;
   if (!/^(?:object|html|children|breakdown)$/.test(output)) {

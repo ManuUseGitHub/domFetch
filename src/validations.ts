@@ -3,7 +3,7 @@ import { VERSION } from "./constants";
 import { FetchOptions } from "./types";
 import { readFile } from "node:fs/promises";
 
-const UA = `dom-fetch/${VERSION}`;
+const UA = `@maze014/dom-fetch/${VERSION}`;
 
 export function validateOutputOption(options: FetchOptions) {
 	const output = options.output;

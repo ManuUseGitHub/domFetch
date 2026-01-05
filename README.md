@@ -2,14 +2,14 @@
 
 Fetch and extract DOM elements from a **URL or local HTML file** using a CSS query selector.
 
-`dom-fetch` lets you retrieve HTML elements and choose how they are represented (raw element, HTML string, children HTML, or a structured breakdown).
+`@maze014/dom-fetch` lets you retrieve HTML elements and choose how they are represented (raw element, HTML string, children HTML, or a structured breakdown).
 
 ---
 
 ## Installation
 
 ```bash
-$ npm install dom-fetch
+$ npm install @maze014/dom-fetch
 ```
 
 ---
@@ -19,7 +19,7 @@ $ npm install dom-fetch
 ### Basic example (fetch from a URL)
 
 ```ts
-import { selectElements } from "dom-fetch";
+import { selectElements } from "@maze014/dom-fetch";
 
 const elements = await selectElements(
   "https://example.com",
@@ -65,12 +65,12 @@ const elements = await selectElements(
 
 The `output` option controls how each matched element is returned.
 
-| Output value | Description |
-|-------------|------------|
-| `"html"` | The full HTML of the matched element (`outerHTML`) |
-| `"children"` | The inner HTML of the matched element |
-| `"object"` | The raw DOM `Element` |
-| `"breakdown"` | A structured object describing the element |
+| Output value  | Description                                        |
+| ------------- | -------------------------------------------------- |
+| `"html"`      | The full HTML of the matched element (`outerHTML`) |
+| `"children"`  | The inner HTML of the matched element              |
+| `"object"`    | The raw DOM `Element`                              |
+| `"breakdown"` | A structured object describing the element         |
 
 ### Breakdown output example
 
@@ -137,12 +137,12 @@ Fetches elements matching a CSS selector from a given source.
 
 #### Parameters
 
-| Parameter | Type | Default | Description |
-|---------|------|---------|-------------|
-| `source` | `string` | — | URL or relative file path containing HTML |
-| `selector` | `string` | — | CSS selector (uses `querySelectorAll`) |
-| `options.output` | `"object" \| "html" \| "children" \| "breakdown"` | `"html"` | Format of returned elements |
-| `options.source` | `"url" \| "file"` | `"url"` | Defines how the source is fetched |
+| Parameter        | Type                                              | Default  | Description                               |
+| ---------------- | ------------------------------------------------- | -------- | ----------------------------------------- |
+| `source`         | `string`                                          | —        | URL or relative file path containing HTML |
+| `selector`       | `string`                                          | —        | CSS selector (uses `querySelectorAll`)    |
+| `options.output` | `"object" \| "html" \| "children" \| "breakdown"` | `"html"` | Format of returned elements               |
+| `options.source` | `"url" \| "file"`                                 | `"url"`  | Defines how the source is fetched         |
 
 #### Returns
 

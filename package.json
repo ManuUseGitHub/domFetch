@@ -1,5 +1,5 @@
 {
-  "name": "dom-fetch",
+  "name": "@maze014/dom-fetch",
   "version": "1.0.0",
   "main": "dist/index.js",
   "description": "Fetch and extract DOM elements from a URL or local HTML file using a CSS query selector.",
