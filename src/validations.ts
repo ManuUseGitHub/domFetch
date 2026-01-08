@@ -15,7 +15,7 @@ export function validateOutputOption(options: FetchOptions) {
 
 export function validateSourceOption(options: FetchOptions) {
 	const source = options.source;
-	if (!/^(?:url|file|string)$/.test(source)) {
+	if (!/^(?:url|file|string|headless)$/.test(source)) {
 		throw `source option not supported ["${source}"]`;
 	}
 	return source;

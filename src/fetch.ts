@@ -5,6 +5,7 @@ import {
 	validateFileExistance,
 	validateResource,
 } from "./validations";
+import puppeteer from "puppeteer";
 
 export async function _fromHttp(
 	source: string,
@@ -17,6 +18,32 @@ export async function _fromHttp(
 	const dom = new JSDOM(html, {
 		url: source,
 		contentType: HTML_CONTENT_TYPE,
+	});
+
+	const document = dom.window.document;
+
+	return Array.from(document.querySelectorAll(selector));
+}
+
+export async function _fromHeadlessBrowser(
+	source: string,
+	selector: string
+): Promise<Element[]> {
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: ["--no-sandbox", "--disable-setuid-sandbox"],
+	});
+
+	const page = await browser.newPage();
+
+	await page.goto(source, { waitUntil: "domcontentloaded" });
+	await page.waitForSelector('body'); // make sure to get the content
+
+	const html = await page.content();
+	await browser.close();
+
+	const dom = new JSDOM(html, {
+		contentType: "text/html",
 	});
 
 	const document = dom.window.document;

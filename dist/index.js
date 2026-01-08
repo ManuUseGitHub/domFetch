@@ -1,6 +1,8 @@
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -14,6 +16,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/index.ts
@@ -28,7 +38,7 @@ var import_jsdom = require("jsdom");
 
 // src/constants.ts
 var HTML_CONTENT_TYPE = "text/html";
-var VERSION = "1.0.2";
+var VERSION = "1.1.0";
 
 // src/validations.ts
 var import_node_fs = require("fs");
@@ -43,7 +53,7 @@ function validateOutputOption(options) {
 }
 function validateSourceOption(options) {
   const source = options.source;
-  if (!/^(?:url|file|string)$/.test(source)) {
+  if (!/^(?:url|file|string|headless)$/.test(source)) {
     throw `source option not supported ["${source}"]`;
   }
   return source;
@@ -74,12 +84,29 @@ async function validateDefinedString(source) {
 }
 
 // src/fetch.ts
+var import_puppeteer = __toESM(require("puppeteer"));
 async function _fromHttp(source, selector) {
   const res = await validateResource(source);
   const html = await res.text();
   const dom = new import_jsdom.JSDOM(html, {
     url: source,
     contentType: HTML_CONTENT_TYPE
+  });
+  const document = dom.window.document;
+  return Array.from(document.querySelectorAll(selector));
+}
+async function _fromHeadlessBrowser(source, selector) {
+  const browser = await import_puppeteer.default.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  });
+  const page = await browser.newPage();
+  await page.goto(source, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("body");
+  const html = await page.content();
+  await browser.close();
+  const dom = new import_jsdom.JSDOM(html, {
+    contentType: "text/html"
   });
   const document = dom.window.document;
   return Array.from(document.querySelectorAll(selector));
@@ -109,6 +136,8 @@ async function selectElements(source, selector, options) {
     const sourceOption = validateSourceOption(fixedOptions);
     if (sourceOption == "url") {
       nodes = await _fromHttp(source, selector);
+    } else if (sourceOption == "headless") {
+      nodes = await _fromHeadlessBrowser(source, selector);
     } else if (sourceOption == "file") {
       nodes = await _fromFile(source, selector);
     } else if (sourceOption == "string") {

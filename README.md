@@ -21,46 +21,76 @@ $ npm install @maze014/dom-fetch
 ```ts
 import { selectElements } from "@maze014/dom-fetch";
 
-const elements = await selectElements(
-  "https://example.com",
-  "h1"
-);
+const soutce = "https://example.com";
+const selector = "h1";
+
+const elements = await selectElements(source,selector);
 
 console.log(elements);
 ```
 
-By default:
-- `source` is `"url"`
-- `output` is `"html"`
-
-So this returns an array of `outerHTML` strings.
+So this returns an array of `outerHTML` strings by default against the  `https://example.com` address.
 
 ---
+
+## Custom usages
+
+Depeding on your needs, you can use the option argument to define how the utility should manage your request.
+You can fetch from multiple sources:
+
+- by html file
+- by runtime string
+- by an headless browser
+- by url (default:basic usage)
 
 ### Fetch from a local HTML file
 
 ```ts
-const elements = await selectElements(
-  "./index.html",
-  ".article",
-  { source: "file" }
-);
+import { selectElements } from "@maze014/dom-fetch";
+
+const soutce = "./index.html";
+const selector = ".article";
+const option = { source: "file" } 
+
+const elements = await selectElements(source,selector,options);
 ```
----
 
 ### Fetch from runtime string
+
 ```ts
-const html = "<!DOCTYPE html>" +`
+import { selectElements } from "@maze014/dom-fetch";
+const source = "<!DOCTYPE html>" +`
 <html>
   <body>
     <a class='article'>Click here<a/>
   </body>
 </html>`;
 
-const elements = await selectElements(
-  html, ".article", { source: "string" }
-);
+const selector = ".article";
+const options = { source: "string" } 
+
+const elements = await selectElements(source,selector,options);
 ```
+
+### Fetch from an headless blowser
+
+In some cases, the content needs to be the result of javascript execution. You may, then, wait for the content to be generated like for example an SPA. We got you covered with the `headless` source option!
+
+We set a strategy leveraging `puppeteer` for that matter.
+
+```ts
+import { selectElements } from "@maze014/dom-fetch";
+
+const soutce = "https://example-with-spa.com";
+const selector = "main";
+const options = { source: "headless" }
+
+const elements = await selectElements(source,selector,options);
+
+console.log(elements);
+```
+
+> ⚠️ Be aware that what you can get from the web console can differ from what you can get with domFetch. Please make sure to check what the output is before continuing your process.
 
 ---
 
@@ -73,8 +103,6 @@ const elements = await selectElements(
   { output: "breakdown" }
 );
 ```
-
----
 
 ## Output formats
 
@@ -117,6 +145,7 @@ console.log(paragraphs.join(""))
 ```
 
 Then write out in an html file
+
 ```bash
 $ node nodeParagraphs.mjs > paragraphs.html
 ```
@@ -125,12 +154,12 @@ $ node nodeParagraphs.mjs > paragraphs.html
 
 First, create a simple js file that displays the paragraphs of the NodeJS page
 
-```js
+```ts
 // nodeParagraphs.mjs
 
 const source = "./example/nodePage.html";
 const selector = "main p";
-const options = { source : 'file' };
+const options = { ... };
 
 const paragraphs = await selectElements(source, selector, options)
 
@@ -138,9 +167,10 @@ console.log(paragraphs.join(""))
 ```
 
 Then write out in an html file
+
 ```bash
 $ node nodeParagraphs.mjs > paragraphs.html
-``` 
+```
 
 ---
 
@@ -156,8 +186,8 @@ Fetches elements matching a CSS selector from a given source.
 | ---------------- | ------------------------------------------------- | -------- | ----------------------------------------- |
 | `source`         | `string`                                          | —        | URL or relative file path containing HTML |
 | `selector`       | `string`                                          | —        | CSS selector (uses `querySelectorAll`)    |
-| `options.output` | `"object" \| "html" \| "children" \| "breakdown"` | `"html"` | Format of returned elements               |
-| `options.source` | `"url" \| "file" \| "string"`                     | `"url"`  | Defines how the source is fetched         |
+| `options.output` | `object` or <br/> **`html`** or <br/> `children` or <br/> `breakdown` | `"html"` | Format of returned elements               |
+| `options.source` | `url` or <br/> **`file`** or <br/> `string` or <br/> `headless`   | `"url"`  | Defines how the source is fetched         |
 
 #### Returns
 
@@ -171,7 +201,7 @@ An array of elements formatted according to the selected `output` option.
 ```ts
 type FetchOptions = {
   output?: "object" | "html" | "children" | "breakdown";
-  source?: "url" | "file" | "string";
+  source?: "url" | "file" | "string" | "headless";
 };
 ```
 
@@ -180,7 +210,6 @@ type FetchOptions = {
 ## Tests
 
 A test project is available via [this repository](https://github.com/ManuUseGitHub/domFetchTest).
-
 
 ---
 

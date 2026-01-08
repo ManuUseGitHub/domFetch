@@ -15,7 +15,8 @@
     "url": "git+https://github.com/ManuUseGitHub/domFetch.git"
   },
   "dependencies": {
-    "jsdom": "^27.4.0"
+    "jsdom": "^27.4.0",
+    "puppeteer": "^24.34.0"
   },
   "scripts": {
     "build": "rm -rf dist; tsup",

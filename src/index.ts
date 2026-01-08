@@ -1,5 +1,5 @@
 import { FetchOptions } from "./types";
-import { _fromFile, _fromHttp, _fromString } from "./fetch";
+import { _fromFile, _fromHeadlessBrowser, _fromHttp, _fromString } from "./fetch";
 import { validateOutputOption, validateSourceOption } from "./validations";
 
 /**
@@ -21,6 +21,10 @@ export async function selectElements(
 
 		if (sourceOption == "url") {
 			nodes = await _fromHttp(source, selector);
+		}
+			else if (sourceOption == "headless") {
+				nodes = await _fromHeadlessBrowser(source, selector);
+			
 		} else if (sourceOption == "file") {
 			nodes = await _fromFile(source, selector);
 		} else if (sourceOption == "string") {
