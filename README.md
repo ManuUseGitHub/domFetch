@@ -21,7 +21,7 @@ $ npm install @maze014/dom-fetch
 ```ts
 import { selectElements } from "@maze014/dom-fetch";
 
-const soutce = "https://example.com";
+const source = "https://example.com";
 const selector = "h1";
 
 const elements = await selectElements(source,selector);
@@ -48,7 +48,7 @@ You can fetch from multiple sources:
 ```ts
 import { selectElements } from "@maze014/dom-fetch";
 
-const soutce = "./index.html";
+const source = "./index.html";
 const selector = ".article";
 const option = { source: "file" } 
 
@@ -81,7 +81,7 @@ We set a strategy leveraging `puppeteer` for that matter.
 ```ts
 import { selectElements } from "@maze014/dom-fetch";
 
-const soutce = "https://example-with-spa.com";
+const source = "https://example-with-spa.com";
 const selector = "main";
 const options = { source: "headless" }
 
